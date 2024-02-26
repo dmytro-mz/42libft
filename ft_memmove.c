@@ -1,0 +1,23 @@
+#include "libft.h"
+
+void    *ft_memmove(void *dst, const void *src, size_t len)
+{
+    int     dir;
+    size_t  i;
+    
+    dir = 1;
+    i = 0;
+    if (dst > src)
+    {
+        dir = -1;
+        i = len - 1;
+    }
+    while (i < len)
+    {
+        ((char *)dst)[i] = ((char *)src)[i];
+        if (i == 0 && dir == -1)
+            break ;
+        i += dir;
+    }
+    return (dst);
+}
