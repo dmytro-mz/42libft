@@ -16,6 +16,10 @@ void	test_is_funcs(void)
 			printf("Error in isascii(%d)\n", i);
 		if ((!!isprint(i) != !!ft_isprint(i)))
 			printf("Error in isprint(%d)\n", i);
+		if (toupper(i) != ft_toupper(i))
+			printf("Error in toupper(%d)\n", i);
+		if (tolower(i) != ft_tolower(i))
+			printf("Error in tolower(%d)\n", i);
 	}
 }
 
@@ -119,6 +123,399 @@ void	test_memmove(void)
 	inner(str, str + 3, 5);
 }
 
+void test_strlcpy()
+{
+	char dst_ft[] = "abcdefghijklmnopqrstuvwxyz";
+	char dst[] = "abcdefghijklmnopqrstuvwxyz";
+	char *src = "123456789";
+	
+	size_t
+	strlcpy(char *dst, const char *src, size_t dsize) // https://github.com/libressl/openbsd/blob/master/src/lib/libc/string/strlcpy.c
+	{
+		const char *osrc = src;
+		size_t nleft = dsize;
+
+		/* Copy as many bytes as will fit. */
+		if (nleft != 0) {
+			while (--nleft != 0) {
+				if ((*dst++ = *src++) == '\0')
+					break;
+			}
+		}
+
+		/* Not enough room in dst, add NUL and traverse rest of src. */
+		if (nleft == 0) {
+			if (dsize != 0)
+				*dst = '\0';		/* NUL-terminate dst */
+			while (*src++)
+				;
+		}
+
+		return(src - osrc - 1);	/* count does not include NUL */
+	}
+	void inner(char *dst, char *dst_ft, char *src, size_t size)
+	{
+		size_t res, res_ft;
+		res = ft_strlcpy(dst_ft, src, size);
+		res_ft = strlcpy(dst, src, size);
+		if (res != res_ft)
+			printf("Error: Result of ft_strlcpy does not match strlcpy for size %li\n", size);
+		if (memcmp(dst_ft, dst, 27) != 0)
+			printf("Error: Result of ft_strlcpy does not match strlcpy for size %li\n", size);
+	}
+	inner(dst, dst_ft, src, 0);
+	inner(dst, dst_ft, src, 5);
+	inner(dst, dst_ft, src, 20);
+}
+
+void test_strlcat()
+{
+	char	*dst = calloc(20, 1);
+	char	*dst_ft = calloc(20, 1);
+
+	char	*src_1 = "123";
+	char	*src_2 = "456789";
+	char	*src_3 = "asd";
+	char	*src_4 = "bcd";
+	char	*src_5 = "qwerty";
+	char	*src_6 = "!@#$%";
+
+	size_t
+	strlcat(char *dst, const char *src, size_t dsize) // https://github.com/libressl/openbsd/blob/master/src/lib/libc/string/strlcat.c
+	{
+		const char *odst = dst;
+		const char *osrc = src;
+		size_t n = dsize;
+		size_t dlen;
+
+		/* Find the end of dst and adjust bytes left but don't go past end. */
+		while (n-- != 0 && *dst != '\0')
+			dst++;
+		dlen = dst - odst;
+		n = dsize - dlen;
+
+		if (n-- == 0)
+			return(dlen + strlen(src));
+		while (*src != '\0') {
+			if (n != 0) {
+				*dst++ = *src;
+				n--;
+			}
+			src++;
+		}
+		*dst = '\0';
+
+		return(dlen + (src - osrc));	/* count does not include NUL */
+	}
+
+	void inner(char *dst, char *dst_ft, char *src, size_t size)
+	{
+		size_t res, res_ft;
+
+		res = strlcat(dst, src, size);
+		res_ft = strlcat(dst_ft, src, size);
+		if (res != res_ft)
+			printf("Error: Result of ft_strlcat does not match strlcpy for src %s\n", src);
+		if (memcmp(dst_ft, dst, size) != 0)
+			printf("Error: Dst of ft_strlcat does not match strlcpy for src %s\n", src);
+	}
+
+	inner(dst, dst_ft, src_1, 20);
+	inner(dst, dst_ft, src_2, 20);
+	inner(dst, dst_ft, src_3, 20);
+	inner(dst, dst_ft, src_4, 20);
+	inner(dst, dst_ft, src_5, 20);
+	inner(dst, dst_ft, src_6, 20);
+	
+	free(dst);
+	free(dst_ft);
+}
+
+void test_strchr()
+{
+	void inner(const char **test_strings, int c) {
+		for (const char **ptr = test_strings; *ptr != NULL; ++ptr) {
+			const char *test_str = *ptr;
+
+			// Call ft_strchr and strchr to find the first occurrence of character c
+			char *ft_strchr_result = ft_strchr(test_str, c);
+			char *strchr_result = strchr(test_str, c);
+
+			// Compare the result of ft_strchr with strchr
+			if (ft_strchr_result != strchr_result) {
+				printf("Error: Result of ft_strchr does not match strchr for string: \"%s\"\n", test_str);
+			}
+		}
+	}
+
+	const char *test_strings[] = {
+		"Hello, world!",
+		"This is a test string.",
+		"An empty string.",
+		"",
+		"12345",
+		"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+		NULL // End of test strings marker
+	};
+	inner(test_strings, 'r');
+    inner(test_strings, 't');
+}
+
+void test_strrchr()
+{
+	void inner(const char **test_strings, int c) {
+		for (const char **ptr = test_strings; *ptr != NULL; ++ptr) {
+			const char *test_str = *ptr;
+
+			char *ft_strrchr_result = ft_strrchr(test_str, c);
+			char *strrchr_result = strrchr(test_str, c);
+
+			if (ft_strrchr_result != strrchr_result) {
+				printf("Error: Result of ft_strrchr does not match strrchr for string: \"%s\"\n", test_str);
+			}
+		}
+	}
+
+	const char *test_strings[] = {
+		"Hello, world!",
+		"This is a test string.",
+		"An empty string.",
+		"",
+		"12345",
+		"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+		NULL // End of test strings marker
+	};
+	inner(test_strings, 'r');
+    inner(test_strings, 't');
+}
+
+void test_strncmp()
+{
+	void inner(const char *s1, const char *s2, size_t n) {
+		// Call ft_strncmp and strncmp to compare the strings s1 and s2 for the first n characters
+		int ft_strncmp_result = ft_strncmp(s1, s2, n);
+		int strncmp_result = strncmp(s1, s2, n);
+
+		// Compare the result of ft_strncmp with strncmp
+		if ((ft_strncmp_result > 0 && strncmp_result <= 0) 
+			|| (ft_strncmp_result < 0 && strncmp_result >= 0) 
+			|| (ft_strncmp_result == 0 && strncmp_result != 0)) {
+			printf("Error: Result of ft_strncmp does not match strncmp for strings: \"%s\" and \"%s\" with length: %zu\n", s1, s2, n);
+		}
+	}
+
+	const char *s1 = "Hello";
+	const char *s2 = "Hello";
+	const char *s3 = "World";
+	const char *s4 = "Hello!";
+	size_t n = 5;
+	inner(s1, s2, n);
+	inner(s1, s3, n);
+	inner(s1, s3, 0);
+	inner(s1, s4, n);
+}
+
+void test_memchr()
+{
+	void inner(const void *s, int c, size_t n) {
+		void *ft_memchr_result = ft_memchr(s, c, n);
+		void *memchr_result = memchr(s, c, n);
+
+		if (ft_memchr_result != memchr_result) {
+			printf("Error: Result of ft_memchr does not match memchr\n");
+		}
+	}
+
+	const char *str_memcpy = "Hello, world!";
+	size_t size = strlen(str_memcpy);
+	for (size_t i = 0; i < size; i++)
+        inner(str_memcpy + i, 'o', size + 1 - i);
+}
+
+void test_memcmp()
+{
+	void inner(const char *s1, const char *s2, size_t n) {
+		int ft_memcmp_result = ft_memcmp(s1, s2, n);
+		int memcmp_result = memcmp(s1, s2, n);
+
+		if ((ft_memcmp_result > 0 && memcmp_result <= 0) 
+			|| (ft_memcmp_result < 0 && memcmp_result >= 0) 
+			|| (ft_memcmp_result == 0 && memcmp_result != 0)) {
+			printf("Error: Result of ft_memcmp does not match memcmp for strings: \"%s\" and \"%s\" with length: %zu\n", s1, s2, n);
+		}
+	}
+
+	const char *s1 = "Hello";
+	const char *s2 = "Hello";
+	const char *s3 = "World";
+	const char *s4 = "Hello!";
+	size_t n = 5;
+	inner(s1, s2, n);
+	inner(s1, s3, n);
+	inner(s1, s3, 0);
+	inner(s1, s4, n);
+}
+
+void test_strnstr()
+{
+	char *
+	strnstr(const char *s, const char *find, size_t slen) // https://github.com/lattera/freebsd/blob/master/lib/libc/string/strnstr.c
+	{
+		char c, sc;
+		size_t len;
+
+		if ((c = *find++) != '\0') {
+			len = strlen(find);
+			do {
+				do {
+					if (slen-- < 1 || (sc = *s++) == '\0')
+						return (NULL);
+				} while (sc != c);
+				if (len > slen)
+					return (NULL);
+			} while (strncmp(s, find, len) != 0);
+			s--;
+		}
+		return ((char *)s);
+	}
+
+	void inner(const char *str, const char *sub, size_t len) {
+		char *ft_strnstr_result = ft_strnstr(str, sub, len);
+		char *strnstr_result = strnstr(str, sub, len);
+		
+		if ((ft_strnstr_result == NULL && strnstr_result != NULL) || (ft_strnstr_result != NULL && strnstr_result == NULL) ||
+			(ft_strnstr_result != NULL && strnstr_result != NULL && ft_strnstr_result != strnstr_result)) {
+			printf("Error: Result of ft_strnstr does not match strnstr for string: \"%s\", substring: \"%s\", and length: %zu\n", str, sub, len);
+		}
+	}
+
+	const char *str = "This is a test string.";
+	const char *sub1 = "is";
+	const char *sub2 = "Hello";
+	const char *sub3 = "string";
+	const char *sub4 = "";
+	inner(str, sub1, 15);
+	inner(str, sub1, 6);
+	inner(str, sub2, 15);
+	inner(str, sub3, 15);
+	inner(str, sub4, 15);
+}
+
+void test_atoi()
+{
+	const char *test_atoi_strings[] = {
+		"1",
+		"7",
+		"10",
+		"100000",
+		"946189",
+		"-1",
+		"-7",
+		"-10",
+		"-100000",
+		"-946189",
+		"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+		"  +01ad",
+		" \t\n\v\r\f -1",
+		"asdasd -5",
+		"++5",
+		"--9",
+		"- 9",
+		"",
+		NULL // End of test strings marker
+	};
+	int i = -1;
+	while (test_atoi_strings[++i])
+	{
+		if (atoi(test_atoi_strings[i]) != ft_atoi(test_atoi_strings[i]))
+			printf("Error in atoi(%s): %d vs %d\n", test_atoi_strings[i], atoi(test_atoi_strings[i]), ft_atoi(test_atoi_strings[i]));
+	}
+}
+
+void	test_calloc(void)
+{
+	void *ptr1 = ft_calloc(0, 10);
+	if (ptr1 != NULL)
+	{
+		printf("Error: calloc failed on test 1\n");
+		free(ptr1);
+	}
+
+	void *ptr2 = ft_calloc(10, 0);
+	if (ptr2 != NULL)
+	{
+		printf("Error: calloc failed on test 2\n");
+		free(ptr2);
+	}
+
+	void *ptr3 = ft_calloc(4294967295, 2);
+	if (ptr3 != NULL)
+	{
+		printf("Error: calloc failed on test 3\n");
+		free(ptr3);
+	}
+
+	size_t nmemb = 5;
+	size_t size = sizeof(int);
+	int *ptr4 = ft_calloc(nmemb, size);
+	if (ptr4 == NULL)
+		printf("Error: calloc failed on test 4: failed memmory allocation\n");
+	else
+	{
+		int all_zeros = 1;
+		for (size_t i = 0; i < nmemb; ++i)
+		{
+			if (ptr4[i] != 0)
+			{
+				all_zeros = 0;
+				break ;
+			}
+		}
+		if (!all_zeros)
+			printf("Error: calloc failed on test 4: values are not all 0\n");
+		int *ptr5 = calloc(nmemb, size);
+		if (memcmp(ptr4, ptr5, nmemb * size) != 0)
+			printf("Error: calloc failed on test 4: result is differ from build-in func\n");
+		free(ptr4);
+		free(ptr5);
+	}
+}
+
+void test_strdup()
+{
+	const char *test_strings[] = {
+		"Hello, world!",
+		"This is a test string.",
+		"An empty string.",
+		"",
+		"12345",
+		"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+		NULL // End of test strings marker
+	};
+
+	for (const char **ptr = test_strings; *ptr != NULL; ++ptr) {
+        const char *test_str = *ptr;
+
+        // Duplicate string using both functions
+        char *ft_dup = ft_strdup(test_str);
+        char *strdup_dup = strdup(test_str);
+
+        // Check if the duplicated strings are NULL
+        if (ft_dup == NULL || strdup_dup == NULL) {
+            printf("Error: Memory allocation failed for string: \"%s\"\n", test_str);
+        } else {
+            // Compare the duplicated strings
+            if (strcmp(ft_dup, strdup_dup) != 0) {
+                printf("Error: Duplicated strings don't match for string: \"%s\"\n", test_str);
+            }
+        }
+
+        // Free the duplicated strings
+        free(ft_dup);
+        free(strdup_dup);
+    }
+}
+
 int	main(void)
 {
 	test_is_funcs();
@@ -126,5 +523,16 @@ int	main(void)
 	test_memset();
     test_bzero();
     test_memcpy();
+	test_strlcpy();
+	test_strlcat();
+	test_strchr();
+	test_strrchr();
+	test_strncmp();
+	test_memchr();
+	test_memcmp();
+	test_strnstr();
+	test_atoi();
+	test_calloc();
+	test_strdup();
 	printf("END\n");
 }

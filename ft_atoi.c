@@ -1,28 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmoroz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/27 16:59:49 by dmoroz            #+#    #+#             */
-/*   Updated: 2024/02/28 16:19:12 by dmoroz           ###   ########.fr       */
+/*   Created: 2024/02/28 17:52:23 by dmoroz            #+#    #+#             */
+/*   Updated: 2024/02/28 17:53:45 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+static int	ft_isspace(int c)
 {
-	size_t	i;
+	if (c >= 9 && c <= 13)
+		return (1);
+	else if (c == ' ')
+		return (1);
+	return (0);
+}
 
-	i = 0;
-	while (size > 0 && src[i] && i < size - 1)
+int	ft_atoi(const char *str)
+{
+	int	sign;
+	int	res;
+
+	while (ft_isspace(*str))
+		str++;
+	sign = 1;
+	if (*str == '+' || *str == '-')
 	{
-		dst[i] = src[i];
-		i++;
+		if (*str == '-')
+			sign = -1;
+		str++;
 	}
-	if (i < size)
-		dst[i] = 0;
-	return (ft_strlen(src));
+	res = 0;
+	while (*str >= '0' && *str <= '9')
+	{
+		res = res * 10 + (*(str++) - '0') * sign;
+	}
+	return (res);
 }
