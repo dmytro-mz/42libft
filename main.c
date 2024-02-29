@@ -516,6 +516,113 @@ void test_strdup()
     }
 }
 
+void test_substr()
+{
+    const char *str = "Hello, World!";
+    void inner(char const* s, unsigned int start, size_t len, const char *ref)
+    {
+        char *res = ft_substr(s, start, len);
+        if ((res == NULL && ref != NULL) || (res != NULL && ref == NULL) || !((res == NULL && ref == NULL) || memcmp(res, ref, strlen(ref) + 1) == 0))
+            printf("Error: result of ft_substr doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref, res);
+    
+        free(res);
+    }
+    inner(str, 0, 20, str);
+    inner(str, 0, 13, str);
+    inner(str, 0,  1, "H");
+    inner(str, 0,  5, "Hello");
+    inner(str, 7, 20, "World!");
+    inner(str, 7,  5, "World");
+    inner(str, 7,  0, "");
+    inner(str, 20, 9, NULL);
+}
+
+void test_strjoin()
+{
+    void inner(char const *s1, char const *s2, const char *ref)
+    {
+        char *res = ft_strjoin(s1, s2);
+        if ((res == NULL && ref != NULL) || (res != NULL && ref == NULL) || !((res == NULL && ref == NULL) || memcmp(res, ref, strlen(ref) + 1) == 0))
+            printf("Error: result of ft_strjoin doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref, res);
+    
+        free(res);
+    }
+    inner("Hello, ", "World!", "Hello, World!");
+    inner("Hello, ", NULL, NULL);
+    inner(NULL, "World!", NULL);
+    inner("Hello, ", "", "Hello, ");
+    inner("", "World!", "World!");
+}
+
+void test_strtrim()
+{
+    void inner(char const *s1, char const *set, const char *ref)
+    {
+        char *res = ft_strtrim(s1, set);
+        if ((res == NULL && ref != NULL) || (res != NULL && ref == NULL) || !((res == NULL && ref == NULL) || memcmp(res, ref, strlen(ref) + 1) == 0))
+            printf("Error: result of ft_strtrim doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref, res);
+    
+        free(res);
+    }
+    inner(NULL, "", NULL);
+    inner("", NULL, NULL);
+    inner("123456789", "", "123456789");
+    inner("123456789", "a", "123456789");
+    inner("123456789", "1", "23456789");
+    inner("123456789", "2", "123456789");
+    inner("", "a", "");
+    inner("", "", "");
+    inner("!!@!!qwerty!!@!!", "!", "@!!qwerty!!@");
+    inner("!!@!!qwerty!!@!!", "!@", "qwerty");
+    inner("!!@!!qwerty!!@!!", "@!", "qwerty");
+    inner("!!@!!qwerty", "@!", "qwerty");
+    inner("qwerty!!@!!", "@!", "qwerty");
+}
+
+void test_split()
+{
+    void inner(char const *s, char c, char **expected_result)
+    {
+        char **result = ft_split(s, c);
+        if ((!result && expected_result) || (result && !expected_result))
+            printf("Error: result of ft_split doesn't fit to reference string: one of them is NULL and another not\n");
+        else if (result && expected_result)
+        {
+            int i = 0;
+            while (result[i] != NULL)
+            {
+                if (!expected_result[i] || strcmp(result[i], expected_result[i]) != 0)
+                    printf("Error: result of ft_split doesn't fit to reference string: \"%s\" vs \"%s\"\n", expected_result[i], result[i]);
+            
+                 i++;
+            }
+            if (result[i] != NULL || expected_result[i] != NULL)
+                printf("Error: result of ft_split doesn't fit to reference: diff length \n");
+        }
+
+        if (result != NULL)
+        {
+            for (int i = 0; result[i] != NULL; i++)
+                free(result[i]);
+            free(result);
+        }
+    }
+    char *expected1[] = {"hello", "world", NULL};
+    inner("hello,world", ',', expected1);
+
+    char *expected2[] = {"apple", "banana", "cherry", NULL};
+    inner("apple banana cherry", ' ', expected2);
+
+    char *expected3[] = {"a", "b", "c", "d", NULL};
+    inner("a b c d", ' ', expected3);
+
+    char *expected4[] = {"one", "two", "three", NULL};
+    inner("  one   two three   ", ' ', expected4);
+
+    char *expected5[] = {"one", "two", "three", "four", NULL};
+    inner(";one;two;three;four", ';', expected5);
+}
+
 int	main(void)
 {
 	test_is_funcs();
@@ -534,5 +641,9 @@ int	main(void)
 	test_atoi();
 	test_calloc();
 	test_strdup();
+	test_substr();
+	test_strjoin();
+	test_strtrim();
+	test_split();
 	printf("END\n");
 }
