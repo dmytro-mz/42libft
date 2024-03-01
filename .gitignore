@@ -5,3 +5,4 @@ TO_DROP*
 .DS_Store
 .idea/*
 *.o
+main.c
