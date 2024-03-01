@@ -561,7 +561,6 @@ void test_strtrim()
         char *res = ft_strtrim(s1, set);
         if ((res == NULL && ref != NULL) || (res != NULL && ref == NULL) || !((res == NULL && ref == NULL) || memcmp(res, ref, strlen(ref) + 1) == 0))
             printf("Error: result of ft_strtrim doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref, res);
-    
         free(res);
     }
     inner(NULL, "", NULL);
@@ -623,6 +622,116 @@ void test_split()
     inner(";one;two;three;four", ';', expected5);
 }
 
+void test_itoa()
+{
+    char ref[20];
+    char *res;
+    
+    for (int i = -10000; i <= 10000; i++)
+    {
+        sprintf(ref, "%d", i);
+        res = ft_itoa(i);
+        if ((res == NULL && ref != NULL) || (res != NULL && ref == NULL) || !((res == NULL && ref == NULL) || strcmp(res, ref) == 0))
+            printf("Error: result of ft_itoa doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref, res);
+        free(res);
+    }
+    
+    sprintf(ref, "%d", 2147483647);
+    res = ft_itoa(2147483647);
+    if ((res == NULL && ref != NULL) || (res != NULL && ref == NULL) || !((res == NULL && ref == NULL) || strcmp(res, ref) == 0))
+        printf("Error: result of ft_itoa doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref, res);
+    free(res);
+    
+    sprintf(ref, "%d", (int)-2147483648);
+    res = ft_itoa(-2147483648);
+    if ((res == NULL && ref != NULL) || (res != NULL && ref == NULL) || !((res == NULL && ref == NULL) || strcmp(res, ref) == 0))
+        printf("Error: result of ft_itoa doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref, res);
+    free(res);
+    
+}
+
+void test_strmapi()
+{
+    char up_and_down(unsigned int i, char c)
+    {
+        if (i % 2)
+            return (ft_tolower(c));
+        return (ft_toupper(c));
+    }
+    char down_and_up(unsigned int i, char c)
+    {
+        if (!(i % 2))
+            return (ft_tolower(c));
+        return (ft_toupper(c));
+    }
+    char *str = "Hello, World!";
+    char *res;
+    
+    char *ref1 = "HeLlO, wOrLd!";
+    res = ft_strmapi(str, &up_and_down);
+    if ((res == NULL && ref1 != NULL) || (res != NULL && ref1 == NULL) || !((res == NULL && ref1 == NULL) || strcmp(res, ref1) == 0))
+        printf("Error: result of ft_itoa doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref1, res);
+    free(res);
+    
+    char *ref2 = "hElLo, WoRlD!";
+    res = ft_strmapi(str, &down_and_up);
+    if ((res == NULL && ref2 != NULL) || (res != NULL && ref2 == NULL) || !((res == NULL && ref2 == NULL) || strcmp(res, ref2) == 0))
+        printf("Error: result of ft_itoa doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref2, res);
+    free(res);
+}
+
+void test_striteri()
+{
+    void suppor(unsigned int i, char *c)
+    {
+        if (*c == 'l')
+            *c = 'L';
+        if (i == 6)
+            *c = '6';
+    }
+    char str[] = "Hello, World!";
+    ft_striteri(str, &suppor);
+    char *ref = "HeLLo,6WorLd!";
+    if ((str == NULL && ref != NULL) || (str != NULL && ref == NULL) || !((str == NULL && ref == NULL) || strcmp(str, ref) == 0))
+        printf("Error: result of ft_itoa doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref, str);
+}
+
+void test_putchar_fd()
+{
+    write(0, "Should be same: \'m\' vs \'", 25);
+    ft_putchar_fd('m', 0);
+    write(0, "\'\n", 2);
+}
+
+void test_putstr_fd()
+{
+    write(0, "Should be same: \"Hello, World!\" vs \"", 37);
+    ft_putstr_fd("Hello, World!", 0);
+    write(0, "\"\n", 2);
+}
+
+void test_putendl_fd()
+{
+    write(0, "Test ft_putendl_fd:\n", 20);
+    ft_putendl_fd("Fist line", 0);
+    ft_putendl_fd("Last line", 0);
+}
+
+void test_putnbr_fd()
+{
+    write(0, "Test ft_putnbr_fd:\n", 19);
+    ft_putnbr_fd(-2147483648, 0);
+    ft_putendl_fd("", 0);
+    ft_putnbr_fd(0, 0);
+    ft_putendl_fd("", 0);
+    ft_putnbr_fd(-7, 0);
+    ft_putendl_fd("", 0);
+    ft_putnbr_fd(100000, 0);
+    ft_putendl_fd("", 0);
+    ft_putnbr_fd(2147483647, 0);
+    ft_putendl_fd("", 0);
+}
+
 int	main(void)
 {
 	test_is_funcs();
@@ -645,5 +754,12 @@ int	main(void)
 	test_strjoin();
 	test_strtrim();
 	test_split();
+	test_itoa();
+	test_strmapi();
+	test_striteri();
+// 	test_putchar_fd();
+// 	test_putstr_fd();
+// 	test_putendl_fd();
+// 	test_putnbr_fd();
 	printf("END\n");
 }

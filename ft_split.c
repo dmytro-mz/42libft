@@ -21,24 +21,6 @@ static int	word_count(char const *s, char sep)
 	return (count);
 }
 
-char	*ft_strndup(const char *s1, size_t n)
-{
-	char	*res;
-	size_t	i;
-
-	res = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 1));
-	if (!res)
-		return (NULL);
-	i = 0;
-	while (s1[i] && i < n)
-	{
-		res[i] = s1[i];
-		i++;
-	}
-	res[i] = 0;
-	return (res);
-}
-
 
 char	**ft_split(char const *s, char c)
 {
@@ -59,7 +41,7 @@ char	**ft_split(char const *s, char c)
 			start = s;
 			while (*s && *s != c)
 				s++;
-			res[w++] = ft_strndup(start, s - start);
+			res[w++] = ft_substr(start, 0, s - start);
 		}
 		else
 			s++;

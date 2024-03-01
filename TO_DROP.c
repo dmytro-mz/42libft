@@ -333,10 +333,11 @@ char    *ft_substr(char const *s, unsigned int start, size_t len)
     i--;
     while (s[i] && i < start + len)
         i++;
-    res = ft_calloc(i - start + 1, sizeof(char));
+    res = (char *)malloc(i - start + 1 * sizeof(char));
     if (!res)
         return (NULL);
     ft_memcpy(res, s + start, i - start);
+    res[i - start] = 0;
     return (res);
 }
 
@@ -380,9 +381,7 @@ char *ft_strtrim(char const *s1, char const *set)
     while (s1[++i])
         if (!ft_strchr(set, s1[i]))
             end = i;
-    res = (char *)malloc(sizeof(char) * (end - start + 2));
-    ft_memcpy(res, s1 + start, end - start + 1);
-    res[end - start + 2] = 0;
+    res = ft_substr(s1, start, end - start + 1);
     return (res);
 }
 
@@ -407,24 +406,6 @@ static int	word_count(char const *s, char sep)
 	return (count);
 }
 
-char	*ft_strndup(const char *s1, size_t n)
-{
-	char	*res;
-	size_t	i;
-
-	res = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 1));
-	if (!res)
-		return (NULL);
-	i = 0;
-	while (s1[i] && i < n)
-	{
-		res[i] = s1[i];
-		i++;
-	}
-	res[i] = 0;
-	return (res);
-}
-
 
 char	**ft_split(char const *s, char c)
 {
@@ -445,11 +426,112 @@ char	**ft_split(char const *s, char c)
 			start = s;
 			while (*s && *s != c)
 				s++;
-			res[w++] = ft_strndup(start, s - start);
+			res[w++] = ft_substr(start, 0, s - start);
 		}
 		else
 			s++;
 	}
 	res[w] = NULL;
 	return (res);
+}
+
+static int itoa_res_len(int n)
+{
+    int res;
+    
+    res = 1;
+    if (n < 0)
+        res++;
+    while (n < -9 || n > 9)
+    {
+        res++;
+        n /= 10;
+    }
+    return (res);
+}
+
+char *ft_itoa(int n)
+{
+    char *res;
+    int res_len;
+    int i;
+    int abs_multiplayer;
+    
+    res_len = itoa_res_len(n);
+    res = (char *)malloc((res_len + 1) * sizeof(char));
+    if (!res)
+        return (NULL);
+    res[res_len] = 0;
+    i = res_len - 1;
+    abs_multiplayer = -2 * (n < 0) + 1;
+    while (n * abs_multiplayer > 0 || i == res_len - 1)
+    {
+        res[i--] = ((n % 10) * abs_multiplayer) + '0';
+        n /= 10;
+    }
+    if (abs_multiplayer < 0)
+        res[i--] = '-';
+    return (res);
+}
+
+char *ft_strmapi(char const *s, char(*f)(unsigned int, char))
+{
+    char *res;
+    unsigned int i;
+    
+    res = (char *)malloc(ft_strlen(s) * sizeof(char));
+    i = 0;
+    while (s[i])
+    {
+        res[i] = (*f)(i, s[i]);
+        i++;
+    }
+    res[i] = 0;
+    return (res);
+}
+
+void ft_striteri(char *s, void (*f)(unsigned int, char *))
+{
+    unsigned int i;
+
+    i = 0;
+    while (s[i])
+    {
+        (*f)(i, s + i);
+        i++;
+    }
+}
+
+void ft_putchar_fd(char c,int fd)
+{
+    write(fd, &c, 1);
+}
+
+void ft_putstr_fd(char *s, int fd)
+{
+    write(fd, s, ft_strlen(s));
+}
+
+void ft_putendl_fd(char *s, int fd)
+{
+    ft_putstr_fd(s, fd);
+    write(fd, "\n", 1);
+}
+
+void ft_putnbr_fd(int n, int fd)
+{
+    if (n == -2147483648)
+    {
+        ft_putstr_fd("-2147483648", fd);
+        return ;
+    }
+    if (n < 0) 
+    {
+        ft_putchar_fd('-', fd);
+        n = -n;
+    }
+    if (n >= 10) {
+        ft_putnbr_fd(n / 10, fd);
+    }
+    ft_putchar_fd(n % 10 + '0', fd);
 }
