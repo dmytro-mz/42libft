@@ -6,3 +6,4 @@ TO_DROP*
 .idea/*
 *.o
 main.c
+libft.a
