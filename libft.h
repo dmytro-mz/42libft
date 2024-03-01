@@ -18,6 +18,13 @@
 # include <string.h>
 # include <unistd.h>
 
+// // struct
+typedef struct s_list
+{
+    void			*content;
+    struct s_list	*next;
+}	t_list;
+
 // // func definition
 // char based
 int		ft_isalnum(int c);
