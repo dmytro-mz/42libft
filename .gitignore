@@ -4,6 +4,7 @@ TO_DROP*
 *.h.*
 .DS_Store
 .idea/*
+.vscode/
 *.o
 main.c
 libft.a
