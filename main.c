@@ -706,7 +706,8 @@ void test_lstlast() {
 
 void test_lstadd_back() {
     void do_nothing(void *content) {}
-    t_list *list = ft_lstnew("first");
+    t_list *list = NULL;
+    ft_lstadd_back(&list, ft_lstnew("first"));
     ft_lstadd_back(&list, ft_lstnew("second"));
     assert(list->next != NULL);
     assert(strcmp(list->content, "first") == 0);
