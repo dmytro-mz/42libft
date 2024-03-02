@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dmoroz <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/02 12:15:28 by dmoroz            #+#    #+#             */
+/*   Updated: 2024/03/02 12:15:35 by dmoroz           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
 static int	word_count(char const *s, char sep)
 {
-	int count;
-	int in_word;
-	
+	int	count;
+	int	in_word;
+
 	count = 0;
 	in_word = 0;
 	while (*s)
@@ -21,14 +33,13 @@ static int	word_count(char const *s, char sep)
 	return (count);
 }
 
-
 char	**ft_split(char const *s, char c)
 {
-	int		w;
-	int		words;
-	char	**res;
-	const char *start;
-	
+	int			w;
+	int			words;
+	char		**res;
+	const char	*start;
+
 	words = word_count(s, c);
 	res = (char **)malloc(sizeof(char *) * (words + 1));
 	if (!res)
