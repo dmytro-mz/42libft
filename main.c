@@ -387,14 +387,14 @@ void test_atoi()
 void	test_calloc(void)
 {
 	void *ptr1 = ft_calloc(0, 10);
-	if (ptr1 != NULL)
+	if (ptr1 == NULL)
 	{
 		printf("Error: calloc failed on test 1\n");
 		free(ptr1);
 	}
 
 	void *ptr2 = ft_calloc(10, 0);
-	if (ptr2 != NULL)
+	if (ptr2 == NULL)
 	{
 		printf("Error: calloc failed on test 2\n");
 		free(ptr2);

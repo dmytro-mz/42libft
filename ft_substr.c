@@ -21,7 +21,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	while (s[i] && i <= start)
 		i++;
 	if (i <= start)
-		return (NULL);
+		return (ft_calloc(1, sizeof(char)));
 	i--;
 	while (s[i] && i < start + len)
 		i++;

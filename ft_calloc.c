@@ -18,7 +18,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	void	*res;
 
 	if (!nmemb || !size)
-		return (NULL);
+		return (malloc(0));
 	if (nmemb > 2147483647 || size > 2147483647 / nmemb)
 		return (NULL);
 	total_size = nmemb * size;
