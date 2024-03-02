@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <bsd/string.h>
+#include <assert.h>
 
 void	test_is_funcs(void)
 {
@@ -682,6 +683,103 @@ void test_putnbr_fd()
     ft_putendl_fd("", 0);
 }
 
+void test_lstnew() {
+    t_list *list = ft_lstnew("test");
+    assert(list != NULL);
+    assert(list->content != NULL);
+    assert(list->next == NULL);
+    assert(strcmp(list->content, "test") == 0);
+    free(list);
+}
+
+void test_lstlast() {
+    t_list *list = ft_lstnew("first");
+    ft_lstadd_back(&list, ft_lstnew("second"));
+    ft_lstadd_back(&list, ft_lstnew("third"));
+    t_list *last = ft_lstlast(list);
+    assert(last != NULL);
+    assert(strcmp(last->content, "third") == 0);
+    free(list); // Free the entire list
+}
+
+void test_lstadd_back() {
+    t_list *list = ft_lstnew("first");
+    ft_lstadd_back(&list, ft_lstnew("second"));
+    assert(list->next != NULL);
+    assert(strcmp(list->next->content, "second") == 0);
+    free(list); // Free the entire list
+}
+
+void test_lstadd_front() {
+    t_list *list = ft_lstnew("first");
+    ft_lstadd_front(&list, ft_lstnew("second"));
+    assert(list != NULL);
+    assert(strcmp(list->content, "second") == 0);
+    free(list); // Free the entire list
+}
+
+void test_lstsize() {
+    t_list *list = ft_lstnew("first");
+    ft_lstadd_back(&list, ft_lstnew("second"));
+    ft_lstadd_back(&list, ft_lstnew("third"));
+    assert(ft_lstsize(list) == 3);
+    free(list); // Free the entire list
+}
+
+void test_lstdelone() {
+    t_list *list = ft_lstnew(ft_strdup("first"));
+    ft_lstdelone(list, &free);
+    // should be no memory leakage! valgrind
+}
+
+void test_lstclear() {
+    t_list *list = ft_lstnew(ft_strdup("first"));
+    ft_lstadd_back(&list, ft_lstnew(ft_strdup("second")));
+    ft_lstadd_back(&list, ft_lstnew(ft_strdup("third")));
+    ft_lstclear(&list, &free);
+    // should be no memory leakage! valgrind
+}
+
+void test_lstiter() {
+    void print_content(void *content)
+    {
+        ft_putendl_fd(content, 0);
+    }
+    t_list *list = ft_lstnew("first");
+    ft_lstadd_back(&list, ft_lstnew("second"));
+    ft_lstiter(list, &print_content);
+    free(list);
+}
+
+void test_lstmap() {
+    void *double_content(void *content) {
+        int *val = (int *)content;
+        int *result = (int *)malloc(sizeof(int));
+        *result = (*val) * 2;
+        return result;
+    }
+
+    t_list *list = ft_lstnew(malloc(sizeof(int)));
+    *(int *)(list->content) = 5;
+    ft_lstadd_back(&list, ft_lstnew(malloc(sizeof(int))));
+    *(int *)(ft_lstlast(list)->content) = 6;
+    ft_lstadd_back(&list, ft_lstnew(malloc(sizeof(int))));
+    *(int *)(ft_lstlast(list)->content) = 7;
+    t_list *mapped = ft_lstmap(list, &double_content, &free);
+    assert(list != NULL);
+    assert(*(int *)(list->content) == 5);
+    assert(*(int *)(list->next->content) == 6);
+    assert(*(int *)(list->next->next->content) == 7);
+    assert((list->next->next->next) == NULL);
+    assert(mapped != NULL);
+    assert(*(int *)(mapped->content) == 10);
+    assert(*(int *)(mapped->next->content) == 12);
+    assert(*(int *)(mapped->next->next->content) == 14);
+    assert((mapped->next->next->next) == NULL);
+    ft_lstclear(&list, &free);
+    ft_lstclear(&mapped, &free);
+}
+
 int	main(void)
 {
 	test_is_funcs();
@@ -711,5 +809,14 @@ int	main(void)
 // 	test_putstr_fd();
 // 	test_putendl_fd();
 // 	test_putnbr_fd();
+    test_lstnew();
+    test_lstlast();
+    test_lstadd_back();
+    test_lstadd_front();
+    test_lstsize();
+    test_lstdelone();
+    test_lstclear();
+    // test_lstiter(); // prints strings
+    test_lstmap();
 	printf("END\n");
 }
