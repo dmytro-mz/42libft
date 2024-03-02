@@ -65,6 +65,7 @@ void	test_memset(void)
 			break ;
 		}
 	}
+	free(str_memset);
 }
 
 void	test_bzero(void)
