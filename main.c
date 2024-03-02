@@ -693,37 +693,43 @@ void test_lstnew() {
 }
 
 void test_lstlast() {
+    void do_nothing(void *content) {}
     t_list *list = ft_lstnew("first");
     ft_lstadd_back(&list, ft_lstnew("second"));
     ft_lstadd_back(&list, ft_lstnew("third"));
     t_list *last = ft_lstlast(list);
     assert(last != NULL);
     assert(strcmp(last->content, "third") == 0);
-    free(list); // Free the entire list
+    ft_lstclear(&list, &do_nothing);
 }
 
 void test_lstadd_back() {
+    void do_nothing(void *content) {}
     t_list *list = ft_lstnew("first");
     ft_lstadd_back(&list, ft_lstnew("second"));
     assert(list->next != NULL);
+    assert(strcmp(list->content, "first") == 0);
     assert(strcmp(list->next->content, "second") == 0);
-    free(list); // Free the entire list
+    ft_lstclear(&list, &do_nothing);
 }
 
 void test_lstadd_front() {
+    void do_nothing(void *content) {}
     t_list *list = ft_lstnew("first");
     ft_lstadd_front(&list, ft_lstnew("second"));
     assert(list != NULL);
     assert(strcmp(list->content, "second") == 0);
-    free(list); // Free the entire list
+    assert(strcmp(list->next->content, "first") == 0);
+    ft_lstclear(&list, &do_nothing);
 }
 
 void test_lstsize() {
+    void do_nothing(void *content) {}
     t_list *list = ft_lstnew("first");
     ft_lstadd_back(&list, ft_lstnew("second"));
     ft_lstadd_back(&list, ft_lstnew("third"));
     assert(ft_lstsize(list) == 3);
-    free(list); // Free the entire list
+    ft_lstclear(&list, &do_nothing);
 }
 
 void test_lstdelone() {
