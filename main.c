@@ -1,6 +1,7 @@
 #include "libft.h"
 #include <ctype.h>
 #include <stdio.h>
+#include <bsd/string.h>
 
 void	test_is_funcs(void)
 {
@@ -129,31 +130,7 @@ void test_strlcpy()
 	char dst_ft[] = "abcdefghijklmnopqrstuvwxyz";
 	char dst[] = "abcdefghijklmnopqrstuvwxyz";
 	char *src = "123456789";
-	
-	size_t
-	strlcpy(char *dst, const char *src, size_t dsize) // https://github.com/libressl/openbsd/blob/master/src/lib/libc/string/strlcpy.c
-	{
-		const char *osrc = src;
-		size_t nleft = dsize;
 
-		/* Copy as many bytes as will fit. */
-		if (nleft != 0) {
-			while (--nleft != 0) {
-				if ((*dst++ = *src++) == '\0')
-					break;
-			}
-		}
-
-		/* Not enough room in dst, add NUL and traverse rest of src. */
-		if (nleft == 0) {
-			if (dsize != 0)
-				*dst = '\0';		/* NUL-terminate dst */
-			while (*src++)
-				;
-		}
-
-		return(src - osrc - 1);	/* count does not include NUL */
-	}
 	void inner(char *dst, char *dst_ft, char *src, size_t size)
 	{
 		size_t res, res_ft;
@@ -181,34 +158,6 @@ void test_strlcat()
 	char	*src_5 = "qwerty";
 	char	*src_6 = "!@#$%";
 
-	size_t
-	strlcat(char *dst, const char *src, size_t dsize) // https://github.com/libressl/openbsd/blob/master/src/lib/libc/string/strlcat.c
-	{
-		const char *odst = dst;
-		const char *osrc = src;
-		size_t n = dsize;
-		size_t dlen;
-
-		/* Find the end of dst and adjust bytes left but don't go past end. */
-		while (n-- != 0 && *dst != '\0')
-			dst++;
-		dlen = dst - odst;
-		n = dsize - dlen;
-
-		if (n-- == 0)
-			return(dlen + strlen(src));
-		while (*src != '\0') {
-			if (n != 0) {
-				*dst++ = *src;
-				n--;
-			}
-			src++;
-		}
-		*dst = '\0';
-
-		return(dlen + (src - osrc));	/* count does not include NUL */
-	}
-
 	void inner(char *dst, char *dst_ft, char *src, size_t size)
 	{
 		size_t res, res_ft;
@@ -216,9 +165,9 @@ void test_strlcat()
 		res = strlcat(dst, src, size);
 		res_ft = strlcat(dst_ft, src, size);
 		if (res != res_ft)
-			printf("Error: Result of ft_strlcat does not match strlcpy for src %s\n", src);
+			printf("Error: Result of ft_strlcat does not match strlcat for src %s\n", src);
 		if (memcmp(dst_ft, dst, size) != 0)
-			printf("Error: Dst of ft_strlcat does not match strlcpy for src %s\n", src);
+			printf("Error: Dst of ft_strlcat does not match strlcat for src %s\n", src);
 	}
 
 	inner(dst, dst_ft, src_1, 20);
