@@ -164,7 +164,7 @@ void test_strlcat()
 		size_t res, res_ft;
 
 		res = strlcat(dst, src, size);
-		res_ft = strlcat(dst_ft, src, size);
+		res_ft = ft_strlcat(dst_ft, src, size);
 		if (res != res_ft)
 			printf("Error: Result of ft_strlcat does not match strlcat for src %s\n", src);
 		if (memcmp(dst_ft, dst, size) != 0)
@@ -177,6 +177,7 @@ void test_strlcat()
 	inner(dst, dst_ft, src_4, 20);
 	inner(dst, dst_ft, src_5, 20);
 	inner(dst, dst_ft, src_6, 20);
+	inner(dst, dst_ft, src_6, 0);
 	
 	free(dst);
 	free(dst_ft);
