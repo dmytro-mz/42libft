@@ -486,7 +486,7 @@ void test_substr()
     inner(str, 7, 20, "World!");
     inner(str, 7,  5, "World");
     inner(str, 7,  0, "");
-    inner(str, 20, 9, NULL);
+    inner(str, 20, 9, "");
 }
 
 void test_strjoin()
