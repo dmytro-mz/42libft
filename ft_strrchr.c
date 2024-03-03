@@ -16,16 +16,18 @@ char	*ft_strrchr(const char *s, int c)
 {
 	size_t			i;
 	const char		*res;
+	unsigned char	casted_c;
 
+	casted_c = (unsigned char)c;
 	res = NULL;
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == c)
+		if (s[i] == casted_c)
 			res = s + i;
 		i++;
 	}
-	if (s[i] == c)
+	if (s[i] == casted_c)
 		res = s + i;
 	return ((char *)res);
 }
