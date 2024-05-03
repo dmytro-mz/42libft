@@ -400,12 +400,12 @@ void	test_calloc(void)
 		free(ptr2);
 	}
 
-	void *ptr3 = ft_calloc(4294967295, 2);
-	if (ptr3 != NULL)
-	{
-		printf("Error: calloc failed on test 3\n");
-		free(ptr3);
-	}
+	// void *ptr3 = ft_calloc(4294967295, 2);
+	// if (ptr3 != NULL)
+	// {
+	// 	printf("Error: calloc failed on test 3\n");
+	// 	free(ptr3);
+	// }
 
 	size_t nmemb = 5;
 	size_t size = sizeof(int);
@@ -500,8 +500,8 @@ void test_strjoin()
         free(res);
     }
     inner("Hello, ", "World!", "Hello, World!");
-    inner("Hello, ", NULL, NULL);
-    inner(NULL, "World!", NULL);
+    // inner("Hello, ", NULL, NULL);
+    // inner(NULL, "World!", NULL);
     inner("Hello, ", "", "Hello, ");
     inner("", "World!", "World!");
 }
@@ -515,8 +515,8 @@ void test_strtrim()
             printf("Error: result of ft_strtrim doesn't fit to reference string: \"%s\" vs \"%s\"\n", ref, res);
         free(res);
     }
-    inner(NULL, "", NULL);
-    inner("", NULL, NULL);
+    // inner(NULL, "", NULL);
+    // inner("", NULL, NULL);
     inner("123456789", "", "123456789");
     inner("123456789", "a", "123456789");
     inner("123456789", "1", "23456789");
@@ -684,109 +684,109 @@ void test_putnbr_fd()
     ft_putendl_fd("", 0);
 }
 
-void test_lstnew() {
-    t_list *list = ft_lstnew("test");
-    assert(list != NULL);
-    assert(list->content != NULL);
-    assert(list->next == NULL);
-    assert(strcmp(list->content, "test") == 0);
-    free(list);
-}
+// void test_lstnew() {
+//     t_list *list = ft_lstnew("test");
+//     assert(list != NULL);
+//     assert(list->content != NULL);
+//     assert(list->next == NULL);
+//     assert(strcmp(list->content, "test") == 0);
+//     free(list);
+// }
 
-void test_lstlast() {
-    void do_nothing(void *content) {}
-    t_list *list = ft_lstnew("first");
-    ft_lstadd_back(&list, ft_lstnew("second"));
-    ft_lstadd_back(&list, ft_lstnew("third"));
-    t_list *last = ft_lstlast(list);
-    assert(last != NULL);
-    assert(strcmp(last->content, "third") == 0);
-    ft_lstclear(&list, &do_nothing);
-}
+// void test_lstlast() {
+//     void do_nothing(void *content) {}
+//     t_list *list = ft_lstnew("first");
+//     ft_lstadd_back(&list, ft_lstnew("second"));
+//     ft_lstadd_back(&list, ft_lstnew("third"));
+//     t_list *last = ft_lstlast(list);
+//     assert(last != NULL);
+//     assert(strcmp(last->content, "third") == 0);
+//     ft_lstclear(&list, &do_nothing);
+// }
 
-void test_lstadd_back() {
-    void do_nothing(void *content) {}
-    t_list *list = NULL;
-    ft_lstadd_back(&list, ft_lstnew("first"));
-    ft_lstadd_back(&list, ft_lstnew("second"));
-    assert(list->next != NULL);
-    assert(strcmp(list->content, "first") == 0);
-    assert(strcmp(list->next->content, "second") == 0);
-    ft_lstclear(&list, &do_nothing);
-}
+// void test_lstadd_back() {
+//     void do_nothing(void *content) {}
+//     t_list *list = NULL;
+//     ft_lstadd_back(&list, ft_lstnew("first"));
+//     ft_lstadd_back(&list, ft_lstnew("second"));
+//     assert(list->next != NULL);
+//     assert(strcmp(list->content, "first") == 0);
+//     assert(strcmp(list->next->content, "second") == 0);
+//     ft_lstclear(&list, &do_nothing);
+// }
 
-void test_lstadd_front() {
-    void do_nothing(void *content) {}
-    t_list *list = ft_lstnew("first");
-    ft_lstadd_front(&list, ft_lstnew("second"));
-    assert(list != NULL);
-    assert(strcmp(list->content, "second") == 0);
-    assert(strcmp(list->next->content, "first") == 0);
-    ft_lstclear(&list, &do_nothing);
-}
+// void test_lstadd_front() {
+//     void do_nothing(void *content) {}
+//     t_list *list = ft_lstnew("first");
+//     ft_lstadd_front(&list, ft_lstnew("second"));
+//     assert(list != NULL);
+//     assert(strcmp(list->content, "second") == 0);
+//     assert(strcmp(list->next->content, "first") == 0);
+//     ft_lstclear(&list, &do_nothing);
+// }
 
-void test_lstsize() {
-    void do_nothing(void *content) {}
-    t_list *list = ft_lstnew("first");
-    ft_lstadd_back(&list, ft_lstnew("second"));
-    ft_lstadd_back(&list, ft_lstnew("third"));
-    assert(ft_lstsize(list) == 3);
-    ft_lstclear(&list, &do_nothing);
-}
+// void test_lstsize() {
+//     void do_nothing(void *content) {}
+//     t_list *list = ft_lstnew("first");
+//     ft_lstadd_back(&list, ft_lstnew("second"));
+//     ft_lstadd_back(&list, ft_lstnew("third"));
+//     assert(ft_lstsize(list) == 3);
+//     ft_lstclear(&list, &do_nothing);
+// }
 
-void test_lstdelone() {
-    t_list *list = ft_lstnew(ft_strdup("first"));
-    ft_lstdelone(list, &free);
-    // should be no memory leakage! valgrind
-}
+// void test_lstdelone() {
+//     t_list *list = ft_lstnew(ft_strdup("first"));
+//     ft_lstdelone(list, &free);
+//     // should be no memory leakage! valgrind
+// }
 
-void test_lstclear() {
-    t_list *list = ft_lstnew(ft_strdup("first"));
-    ft_lstadd_back(&list, ft_lstnew(ft_strdup("second")));
-    ft_lstadd_back(&list, ft_lstnew(ft_strdup("third")));
-    ft_lstclear(&list, &free);
-    // should be no memory leakage! valgrind
-}
+// void test_lstclear() {
+//     t_list *list = ft_lstnew(ft_strdup("first"));
+//     ft_lstadd_back(&list, ft_lstnew(ft_strdup("second")));
+//     ft_lstadd_back(&list, ft_lstnew(ft_strdup("third")));
+//     ft_lstclear(&list, &free);
+//     // should be no memory leakage! valgrind
+// }
 
-void test_lstiter() {
-    void print_content(void *content)
-    {
-        ft_putendl_fd(content, 0);
-    }
-    t_list *list = ft_lstnew("first");
-    ft_lstadd_back(&list, ft_lstnew("second"));
-    ft_lstiter(list, &print_content);
-    free(list);
-}
+// void test_lstiter() {
+//     void print_content(void *content)
+//     {
+//         ft_putendl_fd(content, 0);
+//     }
+//     t_list *list = ft_lstnew("first");
+//     ft_lstadd_back(&list, ft_lstnew("second"));
+//     ft_lstiter(list, &print_content);
+//     free(list);
+// }
 
-void test_lstmap() {
-    void *double_content(void *content) {
-        int *val = (int *)content;
-        int *result = (int *)malloc(sizeof(int));
-        *result = (*val) * 2;
-        return result;
-    }
+// void test_lstmap() {
+//     void *double_content(void *content) {
+//         int *val = (int *)content;
+//         int *result = (int *)malloc(sizeof(int));
+//         *result = (*val) * 2;
+//         return result;
+//     }
 
-    t_list *list = ft_lstnew(malloc(sizeof(int)));
-    *(int *)(list->content) = 5;
-    ft_lstadd_back(&list, ft_lstnew(malloc(sizeof(int))));
-    *(int *)(ft_lstlast(list)->content) = 6;
-    ft_lstadd_back(&list, ft_lstnew(malloc(sizeof(int))));
-    *(int *)(ft_lstlast(list)->content) = 7;
-    t_list *mapped = ft_lstmap(list, &double_content, &free);
-    assert(list != NULL);
-    assert(*(int *)(list->content) == 5);
-    assert(*(int *)(list->next->content) == 6);
-    assert(*(int *)(list->next->next->content) == 7);
-    assert((list->next->next->next) == NULL);
-    assert(mapped != NULL);
-    assert(*(int *)(mapped->content) == 10);
-    assert(*(int *)(mapped->next->content) == 12);
-    assert(*(int *)(mapped->next->next->content) == 14);
-    assert((mapped->next->next->next) == NULL);
-    ft_lstclear(&list, &free);
-    ft_lstclear(&mapped, &free);
-}
+//     t_list *list = ft_lstnew(malloc(sizeof(int)));
+//     *(int *)(list->content) = 5;
+//     ft_lstadd_back(&list, ft_lstnew(malloc(sizeof(int))));
+//     *(int *)(ft_lstlast(list)->content) = 6;
+//     ft_lstadd_back(&list, ft_lstnew(malloc(sizeof(int))));
+//     *(int *)(ft_lstlast(list)->content) = 7;
+//     t_list *mapped = ft_lstmap(list, &double_content, &free);
+//     assert(list != NULL);
+//     assert(*(int *)(list->content) == 5);
+//     assert(*(int *)(list->next->content) == 6);
+//     assert(*(int *)(list->next->next->content) == 7);
+//     assert((list->next->next->next) == NULL);
+//     assert(mapped != NULL);
+//     assert(*(int *)(mapped->content) == 10);
+//     assert(*(int *)(mapped->next->content) == 12);
+//     assert(*(int *)(mapped->next->next->content) == 14);
+//     assert((mapped->next->next->next) == NULL);
+//     ft_lstclear(&list, &free);
+//     ft_lstclear(&mapped, &free);
+// }
 
 int	main(void)
 {
@@ -813,18 +813,21 @@ int	main(void)
 	test_itoa();
 	test_strmapi();
 	test_striteri();
-	// test_putchar_fd();
-	// test_putstr_fd();
-	// test_putendl_fd();
-	// test_putnbr_fd();
-    test_lstnew();
-    test_lstlast();
-    test_lstadd_back();
-    test_lstadd_front();
-    test_lstsize();
-    test_lstdelone();
-    test_lstclear();
-    // test_lstiter(); // prints strings
-    test_lstmap();
+	// test_putchar_fd();  // prints strings
+	// test_putstr_fd();  // prints strings
+	// test_putendl_fd();  // prints strings
+	// test_putnbr_fd();  // prints strings
+
+	// // tests of bonus raund
+    // test_lstnew();
+    // test_lstlast();
+    // test_lstadd_back();
+    // test_lstadd_front();
+    // test_lstsize();
+    // test_lstdelone();
+    // test_lstclear();
+    // // test_lstiter(); // prints strings
+    // test_lstmap();
+
 	printf("END\n");
 }

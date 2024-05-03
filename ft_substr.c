@@ -6,7 +6,7 @@
 /*   By: dmoroz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 12:16:49 by dmoroz            #+#    #+#             */
-/*   Updated: 2024/03/02 12:16:50 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/05/03 11:53:00 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t	i;
 	char	*res;
 
+	if (!s)
+		return (NULL);
 	i = 0;
 	while (s[i] && i <= start)
 		i++;

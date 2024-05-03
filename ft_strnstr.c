@@ -6,7 +6,7 @@
 /*   By: dmoroz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 17:39:41 by dmoroz            #+#    #+#             */
-/*   Updated: 2024/03/02 12:16:29 by dmoroz           ###   ########.fr       */
+/*   Updated: 2024/05/03 11:48:01 by dmoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,15 @@ char	*ft_strnstr(const char *str, const char *sub, size_t len)
 	if (!sub[0])
 		return ((char *)str);
 	i = 0;
-	j = 0;
-	while (str[i] && i < len)
+	while (i < len && str[i])
 	{
-		if (str[i] != sub[j])
-			j = 0;
-		if (str[i] == sub[j])
-		{
+		j = 0;
+		while (sub[j] && str[i + j] == sub[j])
 			j++;
-			if (!sub[j])
-				return ((char *)(str + i - j + 1));
-		}
+		if (i + j > len)
+			break ;
+		if (!sub[j])
+			return ((char *)(str + i));
 		i++;
 	}
 	return (NULL);

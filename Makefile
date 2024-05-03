@@ -1,4 +1,4 @@
-CC = cc
+CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
 NAME = libft.a
@@ -27,5 +27,9 @@ re: fclean all
 
 bonus: $(BONUS_OBJS)
 	ar r $(NAME) $(BONUS_OBJS)
+
+# so:
+# 	$(CC) -nostartfiles -fPIC $(CFLAGS) -c $(SRCS) $(BONUS_SRCS)
+# 	gcc -nostartfiles -shared -o libft.so $(OBJS) $(BONUS_OBJS)
 
 .PHONY: all clean fclean re bonus
